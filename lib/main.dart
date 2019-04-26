@@ -21,7 +21,6 @@ final List<TabClass> choices =  [
   TabClass(title:"精选", choice:new Featured()),
   TabClass(title:"最新", choice:new Newest()),
   TabClass(title:"分类", choice:new PicTabs())
-
 ];
 
 
