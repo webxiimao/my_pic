@@ -9,6 +9,19 @@ class Featured extends StatefulWidget{
   _FeaturedState createState() => new _FeaturedState();
 }
 
+class IconTabField{
+  IconTabField({this.iconTitle, this.icon});
+  final String iconTitle;
+  final Icon icon;
+}
+
+final List<IconTabField> icontab = [
+  IconTabField(iconTitle:"头像",icon:new Icon(Icons.accessibility)),
+  IconTabField(iconTitle:"美颜",icon:new Icon(Icons.vibration)),
+  IconTabField(iconTitle:"少女",icon:new Icon(Icons.data_usage)),
+  IconTabField(iconTitle:"可爱",icon:new Icon(Icons.accessible_forward)),
+
+];
 
 class _FeaturedState extends State<Featured>{
   @override
@@ -30,10 +43,20 @@ class _FeaturedState extends State<Featured>{
         ),
         new Container(
             height: 150,
-            child: new Row(
-                children: <Widget>[
-                  new IconTab()
-                ],
+            child: new Wrap(
+//              direction: Axis.vertical,
+              alignment: WrapAlignment.start,
+//              runAlignment: WrapAlignment.spaceAround,
+//              crossAxisAlignment:WrapCrossAlignment.center,
+//              verticalDirection:VerticalDirection.up,
+//              spacing:40.0,
+//              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                mainAxisSize: MainAxisSize.max,
+//              spacing: 8.0, // gap between adjacent chips
+//              runSpacing: 4.0, // gap between lines
+              children: icontab.map((IconTabField icont){
+                  return new IconTab(iconTitle: icont.iconTitle,icon: icont.icon);
+                }).toList(),
               ),
 
         )
