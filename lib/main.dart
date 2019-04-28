@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import './utils/adapt.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /*导入store*/
 import "./inherited.dart";
@@ -9,6 +11,27 @@ import "./views/newest.dart";
 import "./views/picTabs.dart";
 
 void main() => runApp(new MyApp());
+
+
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context){
+    return new MaterialApp(
+      title:"my pictures apps",
+      home:new MyHomePage(),
+      theme: new ThemeData(
+          appBarTheme: new AppBarTheme(
+            color: Colors.white,
+          )
+      ),
+    );
+  }
+}
+
+
+
+
 
 class TabClass{
   const TabClass({this.title, this.choice});
@@ -36,13 +59,11 @@ class ChoiceCard extends StatelessWidget{
 }
 
 
-class MyApp extends StatelessWidget {
+class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: 'Welcome to Flutter',
-      home: new AppInheritedWidget(
-        child: new DefaultTabController(
+    ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
+    return new DefaultTabController(
           length: choices.length,
           child: new Scaffold(
               appBar: new AppBar(
@@ -53,7 +74,7 @@ class MyApp extends StatelessWidget {
                   color: Colors.black,
                 ),
                 title: new Container(
-                  padding: new EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
+                  padding: new EdgeInsets.fromLTRB(ScreenUtil().setWidth(20), 0, ScreenUtil().setWidth(20), 0),
                   child: new TabBar(
                       indicatorSize: TabBarIndicatorSize.tab,
                       indicatorWeight: 1.0,
@@ -73,13 +94,6 @@ class MyApp extends StatelessWidget {
                 return new ChoiceCard(choice:choice.choice);
 
               }).toList())
-          ),),
-      ),
-      theme: new ThemeData(
-          appBarTheme: new AppBarTheme(
-            color: Colors.white,
-          )
-      ),
-    );
+          ));
   }
 }
