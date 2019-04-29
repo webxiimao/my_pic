@@ -1,9 +1,14 @@
 /*精选页面*/
 import "package:flutter/material.dart";
 import "package:flutter_swiper/flutter_swiper.dart";
-import "../components/iconTab.dart";
 import '../utils/adapt.dart';
 import "package:flutter_screenutil/flutter_screenutil.dart";
+import 'dart:math';
+
+/*components*/
+import "../components/iconTab.dart";
+import "../components/sectionTab.dart";
+
 
 class Featured extends StatefulWidget {
   @override
@@ -74,57 +79,108 @@ final List<IconTabField> icontab = [
       image: Img.tabNavImg("assets/tabnavicon/food-strawberry.png")),
 ];
 
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate({this.child, this.minHeight, this.maxHeight});
+
+  @required
+  final Widget child;
+  @required
+  final double minHeight;
+  @required
+  final double maxHeight;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    // TODO: implement build
+    return new SizedBox.expand(child: child);
+  }
+
+  @override
+  // TODO: implement maxExtent
+  double get maxExtent => max(maxHeight, minHeight);
+
+  @override
+  // TODO: implement minExtent
+  double get minExtent => minHeight;
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
+    // TODO: implement shouldRebuild
+    return maxHeight != oldDelegate.maxExtent ||
+        minHeight != oldDelegate.minExtent;
+  }
+}
+
 class _FeaturedState extends State<Featured> {
   @override
   Widget build(BuildContext context) {
 //    return new Text("精品页");
     return new Container(
         color: Colors.grey,
-        child: new Column(
-          children: <Widget>[
-            new Container(
-              color: Colors.white,
-              height: ScreenUtil().setHeight(420),
-              child: new Swiper(
-                itemCount: 3,
-                itemBuilder: (BuildContext context, int index) {
-                  return new Image.network(
-                    "http://via.placeholder.com/350x150",
-                    fit: BoxFit.fill,
-                  );
-                },
+        child: new CustomScrollView(
+          slivers: <Widget>[
+//            new SliverPersistentHeader(
+//              delegate: new _SliverAppBarDelegate(
+//                minHeight: ScreenUtil().setHeight(50),
+//                maxHeight: ScreenUtil().setHeight(420),
+//                child: new Container(
+//                  color: Colors.white,
+//                  child: new Swiper(
+//                    itemCount: 3,
+//                    itemBuilder: (BuildContext context, int index) {
+//                      return new Image.network(
+//                        "http://via.placeholder.com/350x150",
+//                        fit: BoxFit.fill,
+//                      );
+//                    },
+//                  ),
+//                ),
+//              ),
+//            ),
+            new SliverToBoxAdapter(
+              child: new Container(
+                height: ScreenUtil().setHeight(420),
+                color:  Colors.white,
+                child: new Swiper(
+                  itemCount: 3,
+                  itemBuilder: (BuildContext context, int index) {
+                    return new Image.network(
+                      "http://via.placeholder.com/350x150",
+                      fit: BoxFit.fill,
+                    );
+                  },
+                ),
               ),
             ),
-            new Container(
-              height: ScreenUtil().setHeight(400),
-              color: Colors.white,
-//              width: ScreenUtil().setWidth(750),
-//            height: 150,
-//              child: new Wrap(
-////              direction: Axis.vertical,
-//                alignment: WrapAlignment.start,
-////              runAlignment: WrapAlignment.spaceAround,
-////              crossAxisAlignment:WrapCrossAlignment.center,
-////              verticalDirection:VerticalDirection.up,
-////              spacing:40.0,
-////              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-////                mainAxisSize: MainAxisSize.max,
-////              spacing: 8.0, // gap between adjacent chips
-////              runSpacing: 4.0, // gap between lines
-//                children: icontab.map((IconTabField icont) {
-//                  return new IconTab(
-//                      iconTitle: icont.iconTitle, image: icont.image);
-//                }).toList(),
-//              ),
-              child:  new GridView.count(
-//                      childAspectRatio: 2 / 3,
-                      crossAxisCount: 5,
-                      children: icontab.map((IconTabField icont) {
-                        return new IconTab(
-                            iconTitle: icont.iconTitle, image: icont.image);
-                      }).toList(),
-                    ),
 
+            new SliverPadding(
+              padding: new EdgeInsets.fromLTRB(
+                  0, 0, 0, ScreenUtil().setHeight(15)),
+              sliver: SliverToBoxAdapter(
+                child: Container(
+                  color: Colors.white,
+                  height: ScreenUtil().setHeight(250),
+                  child: GridView.count(
+                    physics: new NeverScrollableScrollPhysics(),
+                    crossAxisCount: 5,
+                    children: icontab.map((IconTabField icont) {
+                      return new IconTab(
+                          iconTitle: icont.iconTitle, image: icont.image);
+                    }).toList(),
+                  ),
+                )
+              ),
+            ),
+            new SliverPadding(
+              padding: new EdgeInsets.fromLTRB(
+                  0, 0, 0, ScreenUtil().setHeight(15)),
+              sliver: SliverToBoxAdapter(
+                child: new SectionTab(
+                  title: "热门专区",
+                  child: new Text("test"),
+                )
+              ),
             )
           ],
         ));
