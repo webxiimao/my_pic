@@ -9,7 +9,6 @@ import 'dart:math';
 import "../components/iconTab.dart";
 import "../components/sectionTab.dart";
 
-
 class Featured extends StatefulWidget {
   @override
   _FeaturedState createState() => new _FeaturedState();
@@ -19,7 +18,7 @@ class Img {
   static tabNavImg(String image) {
     return new Image.asset(
       image,
-      width: ScreenUtil().setWidth(100),
+      width: ScreenUtil().setWidth(60),
     );
   }
 }
@@ -112,36 +111,58 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
+final List<Image> hotPictrues = [
+  new Image.network(
+    "http://via.placeholder.com/350x150",
+    fit: BoxFit.fill,
+  ),
+  new Image.network(
+    "http://via.placeholder.com/350x150",
+    fit: BoxFit.fill,
+  ),
+];
+
+class PicToDetail extends StatefulWidget {
+  PicToDetail({Key key, this.child}) : super(key: key);
+  final Widget child;
+
+  @override
+  _PicToDetailState createState() => new _PicToDetailState();
+}
+
+class _PicToDetailState extends State<PicToDetail> {
+  @override
+  Widget build(BuildContext context) {
+    return new Padding(
+      padding: new EdgeInsets.all(ScreenUtil().setWidth(10)),
+      child: new GestureDetector(
+        onTap: () {
+          print("hot pictures click!");
+        },
+        child: widget.child,
+      ),
+    );
+  }
+}
+
 class _FeaturedState extends State<Featured> {
   @override
   Widget build(BuildContext context) {
+    List<Widget> pictrueUpgrade = [];
+    for (var i = 0; i < 100; i++) {
+      pictrueUpgrade.add( new Image.asset(
+        "assets/img/vertical.jpg",
+      ),);
+    }
 //    return new Text("精品页");
     return new Container(
         color: Colors.grey,
         child: new CustomScrollView(
           slivers: <Widget>[
-//            new SliverPersistentHeader(
-//              delegate: new _SliverAppBarDelegate(
-//                minHeight: ScreenUtil().setHeight(50),
-//                maxHeight: ScreenUtil().setHeight(420),
-//                child: new Container(
-//                  color: Colors.white,
-//                  child: new Swiper(
-//                    itemCount: 3,
-//                    itemBuilder: (BuildContext context, int index) {
-//                      return new Image.network(
-//                        "http://via.placeholder.com/350x150",
-//                        fit: BoxFit.fill,
-//                      );
-//                    },
-//                  ),
-//                ),
-//              ),
-//            ),
             new SliverToBoxAdapter(
               child: new Container(
                 height: ScreenUtil().setHeight(420),
-                color:  Colors.white,
+                color: Colors.white,
                 child: new Swiper(
                   itemCount: 3,
                   itemBuilder: (BuildContext context, int index) {
@@ -153,35 +174,152 @@ class _FeaturedState extends State<Featured> {
                 ),
               ),
             ),
-
             new SliverPadding(
-              padding: new EdgeInsets.fromLTRB(
-                  0, 0, 0, ScreenUtil().setHeight(15)),
+              padding:
+                  new EdgeInsets.fromLTRB(0, 0, 0, ScreenUtil().setHeight(15)),
               sliver: SliverToBoxAdapter(
-                child: Container(
-                  color: Colors.white,
-                  height: ScreenUtil().setHeight(250),
-                  child: GridView.count(
-                    physics: new NeverScrollableScrollPhysics(),
-                    crossAxisCount: 5,
-                    children: icontab.map((IconTabField icont) {
-                      return new IconTab(
-                          iconTitle: icont.iconTitle, image: icont.image);
-                    }).toList(),
-                  ),
-                )
+                  child: Container(
+                padding: new EdgeInsets.fromLTRB(0, ScreenUtil().setHeight(15),
+                    0, ScreenUtil().setHeight(15)),
+                color: Colors.white,
+                height: ScreenUtil().setHeight(240),
+                child: GridView.count(
+                  physics: new NeverScrollableScrollPhysics(),
+                  crossAxisCount: 5,
+                  children: icontab.map((IconTabField icont) {
+                    return new IconTab(
+                        iconTitle: icont.iconTitle, image: icont.image);
+                  }).toList(),
+                ),
+              )),
+            ),
+            new SectionTab(
+              title: "热门专区",
+              handleMoreClick: () {
+                print("click more");
+              },
+              child: new Row(
+                children: hotPictrues.map((Image img) {
+                  return new Expanded(
+                      child: new PicToDetail(
+                    child: img,
+                  ));
+                }).toList(),
               ),
             ),
-            new SliverPadding(
-              padding: new EdgeInsets.fromLTRB(
-                  0, 0, 0, ScreenUtil().setHeight(15)),
-              sliver: SliverToBoxAdapter(
-                child: new SectionTab(
-                  title: "热门专区",
-                  child: new Text("test"),
-                )
+            new SectionTab(
+              title: "原创专区",
+              handleMoreClick: () {
+                print("click more");
+              },
+              child: new Row(
+                children: <Widget>[
+                  new Expanded(
+                    flex: 3,
+                    child: new PicToDetail(
+                      child: new Image.asset(
+                        "assets/img/vertical.jpg",
+                      ),
+                    ),
+                  ),
+                  new Expanded(
+                      flex: 4,
+                      child: new SizedBox(
+                        height: 230,
+                        child: new Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            new Expanded(
+                              child: new Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  new Container(
+                                    height: ScreenUtil().setHeight(75),
+                                    child: new Row(
+                                      children: <Widget>[
+                                        new Container(
+                                          padding: new EdgeInsets.only(
+                                              right: ScreenUtil().setWidth(20)),
+                                          child: new Column(
+                                            children: <Widget>[
+                                              new Text(
+                                                "雁冰icey",
+                                                style: TextStyle(
+                                                    color: Colors.green,
+                                                    fontSize: 14),
+                                              ),
+                                              new Text(
+                                                "江苏 摄影师",
+                                                style: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 12),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        new Image.asset(
+                                          "assets/tabnavicon/food-bread.png",
+                                          width: ScreenUtil().setWidth(75),
+                                        )
+                                      ],
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                    ),
+                                  ),
+                                  new Text("熟悉的陌生了，陌生的走远了"),
+                                ],
+                              ),
+                              flex: 1,
+                            ),
+                            new Expanded(
+                              child: new Center(
+                                  child: new Row(
+                                children: <Widget>[
+                                  new Expanded(
+                                      child: new PicToDetail(
+                                    child: new Image.asset(
+                                      "assets/img/vertical.jpg",
+                                    ),
+                                  )),
+                                  new Expanded(
+                                      child: new PicToDetail(
+                                        child: new Image.asset(
+                                          "assets/img/vertical.jpg",
+                                        ),
+                                  )),
+                                  new Expanded(
+                                      child: new PicToDetail(
+                                        child: new Image.asset(
+                                          "assets/img/vertical.jpg",
+                                        ),
+                                  )),
+                                ],
+                              )),
+                              flex: 1,
+                            ),
+//
+                          ],
+                        ),
+                      ))
+                ],
               ),
-            )
+            ),
+            new SectionTab(
+                title: "每日更新",
+                child: new Container(
+//                height: 500,
+                  child: new GridView.count(
+                      shrinkWrap: true,
+                      /*收缩包装*/
+                      physics: new NeverScrollableScrollPhysics(),
+                      crossAxisCount: 3,
+                      children: pictrueUpgrade,
+                      crossAxisSpacing: 5.0,
+                      mainAxisSpacing: 5.0,
+                      childAspectRatio: 2 / 3),
+//                constraints: BoxConstraints,
+                ))
           ],
         ));
   }
