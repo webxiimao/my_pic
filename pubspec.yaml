@@ -55,6 +55,7 @@ flutter:
     - assets/tabnavicon/food-pudding.png
     - assets/tabnavicon/food-strawberry.png
     - assets/img/vertical.jpg
+    - assets/img/256.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

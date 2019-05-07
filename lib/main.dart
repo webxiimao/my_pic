@@ -9,6 +9,7 @@ import "./inherited.dart";
 import "./views/featured.dart";
 import "./views/newest.dart";
 import "./views/picTabs.dart";
+import './views/test.dart';
 
 void main() => runApp(new MyApp());
 
@@ -43,7 +44,8 @@ class TabClass{
 final List<TabClass> choices =  [
   TabClass(title:"精选", choice:new Featured()),
   TabClass(title:"最新", choice:new Newest()),
-  TabClass(title:"分类", choice:new PicTabs())
+  TabClass(title:"分类", choice:new PicTabs()),
+  TabClass(title:"测试", choice:new Test()),
 ];
 
 
