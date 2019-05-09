@@ -4,6 +4,7 @@ import "package:flutter_swiper/flutter_swiper.dart";
 import '../utils/adapt.dart';
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import 'dart:math';
+import '../services/http.dart';
 
 /*components*/
 import "../components/iconTab.dart";
@@ -145,15 +146,53 @@ class _PicToDetailState extends State<PicToDetail> {
   }
 }
 
+class PicUpgradeList{
+  final String img_url;
+  PicUpgradeList({this.img_url});
+
+  factory PicUpgradeList.fromJson(Map<String, dynamic> json){
+    return PicUpgradeList(
+      img_url: json['img_url']
+    );
+  }
+}
+
 class _FeaturedState extends State<Featured> {
+
+
+  List pictrueUpgrade = [];
+
+  @override
+  void initState(){
+    _getAllImgs();
+    super.initState();
+  }
+
+
+
+  void _getAllImgs() async{
+    var result =
+    await HttpUtils.request("/girls/getAllImgs", method: HttpUtils.GET);
+    List list = [];
+    if (result['status']) {
+      list = result['data']['list'];
+    }
+    if (mounted) {
+      setState(() {
+        pictrueUpgrade = list.map((json) => PicUpgradeList.fromJson(json)).toList();
+//        print(pictrueUpgrade);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Widget> pictrueUpgrade = [];
-    for (var i = 0; i < 100; i++) {
-      pictrueUpgrade.add( new Image.asset(
-        "assets/img/vertical.jpg",
-      ),);
-    }
+//    List<Widget> pictrueUpgrade = [];
+//    for (var i = 0; i < 100; i++) {
+//      pictrueUpgrade.add( new Image.asset(
+//        "assets/img/vertical.jpg",
+//      ),);
+//    }
 //    return new Text("精品页");
     return new Container(
         color: Colors.grey,
@@ -314,12 +353,15 @@ class _FeaturedState extends State<Featured> {
                       /*收缩包装*/
                       physics: new NeverScrollableScrollPhysics(),
                       crossAxisCount: 3,
-                      children: pictrueUpgrade,
+                      children: pictrueUpgrade.map((item){
+                        return new Image.network(item.img_url,fit: BoxFit.fill,);
+                      }).toList(),
                       crossAxisSpacing: 5.0,
                       mainAxisSpacing: 5.0,
-                      childAspectRatio: 2 / 3),
+                      childAspectRatio: 3 / 4),
 //                constraints: BoxConstraints,
                 ))
+
           ],
         ));
   }
