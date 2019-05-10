@@ -35,7 +35,7 @@ class _PicTabsState extends State<PicTabs> {
 
   void _getTabsData() async {
     var result =
-        await HttpUtils.request("/girls/getTags", method: HttpUtils.GET);
+        await HttpUtils.request("/girls/getTags",data: {"a":1}, method: HttpUtils.GET);
     List list = [];
     if (result['status']) {
       list = result['data']['list'];

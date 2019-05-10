@@ -12,7 +12,10 @@ class HttpUtils{
 
   /*http request options*/
   static const String ENV = Config.ENV;//环境
+  static const String HOST = Config.HOST;//host
   static const String BASEURL = Config.BASEURL;//host
+  static const String PORT = Config.PORT;//port
+  static const String PROXYPORT = Config.PROXYPORT;//抓包port
   static const String VERSION = Config.VERSION;//版本号
   static const int CONNECT_TIMEOUT = 10000;
   static const int RECEIVE_TIMEOUT = 3000;
@@ -27,6 +30,7 @@ class HttpUtils{
    * request 请求方法
    */
   static Future<Map> request(url, { data,method }) async {
+
     data = data ?? {};
     method = method ?? "GET";
 
@@ -35,12 +39,12 @@ class HttpUtils{
     var result;
 
     try {
-      Response response = await dio.request(url, data: data, options: new Options(method: method));
+      Response response = await dio.request(url, queryParameters: data, options: new Options(method: method));
 
       result = response.data;
 
       /// 打印响应相关信息
-      print('响应数据：' + response.toString());
+//      print('响应数据：' + response.toString());
     } on DioError catch (e) {
       /// 打印请求失败相关信息
       print('请求出错：' + e.toString());
@@ -57,18 +61,19 @@ class HttpUtils{
     if(dio == null){
 
       BaseOptions options = new BaseOptions(
-        baseUrl: BASEURL + '/' + VERSION,
+//        baseUrl: BASEURL + ":" + PORT + '/' + VERSION,
+        baseUrl: "$BASEURL:$PORT/$VERSION",
         connectTimeout: CONNECT_TIMEOUT,
-        receiveTimeout: RECEIVE_TIMEOUT
+        receiveTimeout: RECEIVE_TIMEOUT,
       );
 
       dio = new Dio(options);
-      dio.options.headers['Content-Type'] = "application/json;charset=UTF-8";
-      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
-        client.findProxy = (uri) {
-          return 'PROXY 192.168.102.189:8888';
-        };
-      };
+//      dio.options.headers['Content-Type'] = "application/json;charset=UTF-8";
+//      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
+//        client.findProxy = (uri) {
+//          return 'PROXY $HOST:$PROXYPORT';
+//        };
+//      };
     }
 
     return dio;

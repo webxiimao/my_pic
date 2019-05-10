@@ -3,12 +3,83 @@ import "package:flutter/material.dart";
 import "package:flutter_swiper/flutter_swiper.dart";
 import '../utils/adapt.dart';
 import "package:flutter_screenutil/flutter_screenutil.dart";
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'dart:math';
+import 'dart:typed_data';
 import '../services/http.dart';
 
 /*components*/
 import "../components/iconTab.dart";
 import "../components/sectionTab.dart";
+
+final Uint8List kTransparentImage = new Uint8List.fromList(<int>[
+  0x89,
+  0x50,
+  0x4E,
+  0x47,
+  0x0D,
+  0x0A,
+  0x1A,
+  0x0A,
+  0x00,
+  0x00,
+  0x00,
+  0x0D,
+  0x49,
+  0x48,
+  0x44,
+  0x52,
+  0x00,
+  0x00,
+  0x00,
+  0x01,
+  0x00,
+  0x00,
+  0x00,
+  0x01,
+  0x08,
+  0x06,
+  0x00,
+  0x00,
+  0x00,
+  0x1F,
+  0x15,
+  0xC4,
+  0x89,
+  0x00,
+  0x00,
+  0x00,
+  0x0A,
+  0x49,
+  0x44,
+  0x41,
+  0x54,
+  0x78,
+  0x9C,
+  0x63,
+  0x00,
+  0x01,
+  0x00,
+  0x00,
+  0x05,
+  0x00,
+  0x01,
+  0x0D,
+  0x0A,
+  0x2D,
+  0xB4,
+  0x00,
+  0x00,
+  0x00,
+  0x00,
+  0x49,
+  0x45,
+  0x4E,
+  0x44,
+  0xAE,
+]);
+
+
 
 class Featured extends StatefulWidget {
   @override
@@ -159,27 +230,48 @@ class PicUpgradeList{
 
 class _FeaturedState extends State<Featured> {
 
-
+  /*data*/
   List pictrueUpgrade = [];
+  bool isLoadingPic = false;
+  ScrollController _scrollController = new ScrollController();
 
+  /*init*/
   @override
   void initState(){
+    _initListener();
     _getAllImgs();
     super.initState();
   }
 
-
+  void _initListener(){
+    _scrollController.addListener((){
+        if(_scrollController.position.pixels > _scrollController.position.maxScrollExtent - 400 && !isLoadingPic){
+          _getAllImgs();
+        }
+    });
+  }
 
   void _getAllImgs() async{
+    setState(() {
+      isLoadingPic = true;
+    });
     var result =
-    await HttpUtils.request("/girls/getAllImgs", method: HttpUtils.GET);
+    await HttpUtils.request(
+        "/girls/getAllImgs",
+        method: HttpUtils.GET,
+        data: {
+            "pageIndex" : (pictrueUpgrade.length / 12 + 1).toStringAsFixed(0),
+            "pageSize" : 15,
+        }
+    );
     List list = [];
     if (result['status']) {
       list = result['data']['list'];
     }
     if (mounted) {
       setState(() {
-        pictrueUpgrade = list.map((json) => PicUpgradeList.fromJson(json)).toList();
+        pictrueUpgrade.addAll(list.map((json) => PicUpgradeList.fromJson(json)).toList());
+        isLoadingPic = false;
 //        print(pictrueUpgrade);
       });
     }
@@ -194,9 +286,11 @@ class _FeaturedState extends State<Featured> {
 //      ),);
 //    }
 //    return new Text("精品页");
+    print(pictrueUpgrade.length);
     return new Container(
         color: Colors.grey,
         child: new CustomScrollView(
+          controller: _scrollController,
           slivers: <Widget>[
             new SliverToBoxAdapter(
               child: new Container(
@@ -346,23 +440,50 @@ class _FeaturedState extends State<Featured> {
             ),
             new SectionTab(
                 title: "每日更新",
-                child: new Container(
+//                child: new Container(
 //                height: 500,
-                  child: new GridView.count(
-                      shrinkWrap: true,
-                      /*收缩包装*/
-                      physics: new NeverScrollableScrollPhysics(),
-                      crossAxisCount: 3,
-                      children: pictrueUpgrade.map((item){
-                        return new Image.network(item.img_url,fit: BoxFit.fill,);
-                      }).toList(),
-                      crossAxisSpacing: 5.0,
-                      mainAxisSpacing: 5.0,
-                      childAspectRatio: 3 / 4),
-//                constraints: BoxConstraints,
-                ))
+//                  child: new GridView.count(
+//                      shrinkWrap: true,
+//                      /*收缩包装*/
+//                      physics: new NeverScrollableScrollPhysics(),
+//                      crossAxisCount: 3,
+//                      children: pictrueUpgrade.map((item){
+//                        return new FadeInImage.memoryNetwork(
+//                          placeholder:kTransparentImage,
+//                          image: item.img_url,
+//                        );
+//                      }).toList(),
+//                      crossAxisSpacing: 5.0,
+//                      mainAxisSpacing: 5.0,
+////                      childAspectRatio: 3 / 4
+//                  ),
+                  child: new StaggeredGridView.countBuilder(
+                    primary: false,
+                    shrinkWrap:true,
+                    crossAxisCount: 4,
+                    itemCount: pictrueUpgrade.length,
+                    mainAxisSpacing: 4.0,
+                    crossAxisSpacing: 4.0,
+                    itemBuilder: (context, index) =>  new _Tile(index, pictrueUpgrade[index]),
+                    staggeredTileBuilder: (index) => new StaggeredTile.fit(2),
+                  ),
+                ),
+//            )
 
           ],
         ));
+  }
+}
+
+
+class _Tile extends StatelessWidget{
+  final int index;
+  final PicUpgradeList img;
+  _Tile(this.index, this.img);
+
+  @override
+  Widget build(BuildContext context) {
+    return new FadeInImage.memoryNetwork(placeholder: kTransparentImage, image: img.img_url);
+//    return new Image.network(img.img_url);
   }
 }
