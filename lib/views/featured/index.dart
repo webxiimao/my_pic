@@ -1,18 +1,18 @@
 /*精选页面*/
 import "package:flutter/material.dart";
 import "package:flutter_swiper/flutter_swiper.dart";
-import '../utils/adapt.dart';
+import '../../utils/adapt.dart';
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'dart:math';
 import 'dart:typed_data';
-import '../services/http.dart';
+import '../../services/http.dart';
 
-import '../utils/utils.dart';
+import '../../utils/utils.dart';
 
 /*components*/
-import "../components/iconTab.dart";
-import "../components/sectionTab.dart";
+import "../../components/iconTab.dart";
+import "../../components/sectionTab.dart";
 
 final Uint8List kTransparentImage = new Uint8List.fromList(<int>[
   0x89,
@@ -106,18 +106,6 @@ class IconTabField {
   final Image image;
 }
 
-/*
-*   - assets/tabnavicon/food-avocado.png
-    - assets/tabnavicon/food-bread.png
-    - assets/tabnavicon/food-chips.png
-    - assets/tabnavicon/food-cookie.png
-    - assets/tabnavicon/food-doughnut.png
-    - assets/tabnavicon/food-pecan.png
-    - assets/tabnavicon/food-pizza.png
-    - assets/tabnavicon/food-popcorn.png
-    - assets/tabnavicon/food-pudding.png
-    - assets/tabnavicon/food-strawberry.png
-* */
 
 final List<IconTabField> icontab = [
   IconTabField(
@@ -276,7 +264,6 @@ class _FeaturedState extends State<Featured> {
       setState(() {
         pictrueUpgrade.addAll(list.map((json) => PicUpgradeList.fromJson(json)).toList());
         isLoadingPic = false;
-//        print(pictrueUpgrade);
       });
     }
   }
@@ -293,6 +280,7 @@ class _FeaturedState extends State<Featured> {
                 height: ScreenUtil().setHeight(420),
                 color: Colors.white,
                 child: new Swiper(
+                  autoplay:true,
                   itemCount: 3,
                   itemBuilder: (BuildContext context, int index) {
                     return new Image.network(

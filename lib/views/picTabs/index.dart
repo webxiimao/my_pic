@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
-import '../services/http.dart';
-import '../utils/utils.dart';
+import '../../services/http.dart';
+import '../../utils/utils.dart';
 
 class PicTabs extends StatefulWidget {
   @override
@@ -42,7 +42,6 @@ class _PicTabsState extends State<PicTabs> {
     List list = [];
     if (result['status']) {
       list = result['data']['list'];
-      print(list);
     }
     if (mounted) {
       setState(() {
