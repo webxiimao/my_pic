@@ -8,6 +8,8 @@ import 'dart:math';
 import 'dart:typed_data';
 import '../services/http.dart';
 
+import '../utils/utils.dart';
+
 /*components*/
 import "../components/iconTab.dart";
 import "../components/sectionTab.dart";
@@ -219,11 +221,13 @@ class _PicToDetailState extends State<PicToDetail> {
 
 class PicUpgradeList{
   final String img_url;
-  PicUpgradeList({this.img_url});
+  final String local_img_url;
+  PicUpgradeList({this.img_url, this.local_img_url});
 
   factory PicUpgradeList.fromJson(Map<String, dynamic> json){
     return PicUpgradeList(
-      img_url: json['img_url']
+      img_url: json['img_url'],
+      local_img_url: json['local_img_url']
     );
   }
 }
@@ -279,14 +283,6 @@ class _FeaturedState extends State<Featured> {
 
   @override
   Widget build(BuildContext context) {
-//    List<Widget> pictrueUpgrade = [];
-//    for (var i = 0; i < 100; i++) {
-//      pictrueUpgrade.add( new Image.asset(
-//        "assets/img/vertical.jpg",
-//      ),);
-//    }
-//    return new Text("精品页");
-    print(pictrueUpgrade.length);
     return new Container(
         color: Colors.grey,
         child: new CustomScrollView(
@@ -411,8 +407,10 @@ class _FeaturedState extends State<Featured> {
                                 children: <Widget>[
                                   new Expanded(
                                       child: new PicToDetail(
-                                    child: new Image.asset(
-                                      "assets/img/vertical.jpg",
+                                    child: Center(
+                                      child: new Image.asset(
+                                        "assets/img/vertical.jpg",
+                                      ),
                                     ),
                                   )),
                                   new Expanded(
@@ -483,7 +481,7 @@ class _Tile extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return new FadeInImage.memoryNetwork(placeholder: kTransparentImage, image: img.img_url);
+    return new FadeInImage.memoryNetwork(placeholder: kTransparentImage, image: img.local_img_url !=null ? "${Utils.getBaseUrl()}${img.local_img_url}":img.img_url );
 //    return new Image.network(img.img_url);
   }
 }

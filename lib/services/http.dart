@@ -68,12 +68,15 @@ class HttpUtils{
       );
 
       dio = new Dio(options);
-//      dio.options.headers['Content-Type'] = "application/json;charset=UTF-8";
-//      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
-//        client.findProxy = (uri) {
-//          return 'PROXY $HOST:$PROXYPORT';
-//        };
-//      };
+      if(Config.httpDebug){
+        dio.options.headers['Content-Type'] = "application/json;charset=UTF-8";
+        (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
+          client.findProxy = (uri) {
+            return 'PROXY $HOST:$PROXYPORT';
+          };
+        };
+      }
+
     }
 
     return dio;

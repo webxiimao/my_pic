@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import '../services/http.dart';
+import '../utils/utils.dart';
 
 class PicTabs extends StatefulWidget {
   @override
@@ -9,9 +10,10 @@ class PicTabs extends StatefulWidget {
 List imgList = [];
 
 class ImgList {
-  ImgList({this.cover_img, this.tag, this.title});
+  ImgList({this.local_cover_img,this.cover_img, this.tag, this.title});
 
   final String cover_img;
+  final String local_cover_img;
   final String title;
   final String tag;
 
@@ -22,6 +24,7 @@ class ImgList {
       cover_img: json['cover_img'] as String,
       title: json['title'] as String,
       tag: json['tag'] as String,
+      local_cover_img: json['local_cover_img'] as String,
     );
   }
 }
@@ -39,6 +42,7 @@ class _PicTabsState extends State<PicTabs> {
     List list = [];
     if (result['status']) {
       list = result['data']['list'];
+      print(list);
     }
     if (mounted) {
       setState(() {
@@ -64,7 +68,7 @@ class _PicTabsState extends State<PicTabs> {
               child: new Row(
                 children: <Widget>[
                   new Image.network(
-                    item.cover_img,
+                    item.local_cover_img!=null?"${Utils.getBaseUrl()}${item.local_cover_img}":item.cover_img ,
                     fit: BoxFit.fill,
                   ),
 //                  new Image.network(
