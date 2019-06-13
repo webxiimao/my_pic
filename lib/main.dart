@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './home.dart';
 
 /*导入store*/
 import "./inherited.dart";
@@ -22,6 +23,21 @@ class MyApp extends StatelessWidget {
             color: Colors.white,
           )
       ),
+//      onGenerateRoute: (RouteSettings setting ){
+//        final String name = setting.name;
+//        final Function pageContentBuilder = routes['name'];
+//        print(name);
+//        print(setting.arguments);
+//
+//        if(pageContentBuilder != null){
+//          final Route route = MaterialPageRoute(
+//            builder: (context){
+//              return pageContentBuilder(context, arguments:setting.arguments);
+//            }
+//          );
+//          return route;
+//        }
+//      },
       routes: routes(context),
     );
   }
